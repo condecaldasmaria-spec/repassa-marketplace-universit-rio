@@ -1,6 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import { CircleCheck, CircleX, Star } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { type Material, formatPrice } from "@/data/materials";
 
 export function MaterialCard({ material }: { material: Material }) {
@@ -47,6 +49,10 @@ export function MaterialCard({ material }: { material: Material }) {
             {material.vendedor.notaMedia.toFixed(1).replace(".", ",")}
           </span>
         </div>
+
+        <Button asChild variant="outline" className="mt-3 w-full">
+          <Link to="/material/$id" params={{ id: material.id }}>VER DETALHES</Link>
+        </Button>
       </div>
     </article>
   );
