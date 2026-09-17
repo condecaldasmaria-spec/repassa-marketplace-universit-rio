@@ -1,24 +1,88 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Calculator, FlaskConical, Ruler, Search, Shirt } from "lucide-react";
+import { useState, type FormEvent } from "react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { AppShell } from "@/components/app-shell";
+import { MaterialCard } from "@/components/material-card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { categories, materials } from "@/data/materials";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Repassa — materiais acadêmicos entre universitários" },
+      { name: "description", content: "Encontre livros, calculadoras, jalecos e materiais acadêmicos usados na sua comunidade universitária." },
+      { property: "og:title", content: "Repassa — materiais acadêmicos entre universitários" },
+      { property: "og:description", content: "Economize e faça bons materiais circularem na universidade." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [term, setTerm] = useState("");
+  const navigate = useNavigate();
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    void navigate({ to: "/buscar", search: { q: term || undefined, categoria: undefined } });
+  }
+
+  const categoryIcons = [Search, Calculator, Shirt, Ruler, FlaskConical];
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <AppShell>
+      <main>
+        <section className="border-b border-border bg-soft">
+          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+            <p className="mb-2 text-sm font-semibold uppercase text-primary">Sua universidade, mais circular</p>
+            <h1 className="max-w-2xl text-3xl font-bold leading-tight text-brand-dark sm:text-4xl">
+              O material que você precisa pode estar a poucos corredores.
+            </h1>
+            <p className="mt-3 max-w-xl text-base text-muted-foreground">
+              Compre, venda, troque ou doe itens acadêmicos dentro da comunidade universitária.
+            </p>
+            <form onSubmit={submit} className="mt-7 flex max-w-2xl gap-2 rounded-lg bg-card p-2 shadow-card" role="search">
+              <div className="relative min-w-0 flex-1">
+                <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                <Input value={term} onChange={(event) => setTerm(event.target.value)} className="border-0 pl-10 shadow-none focus-visible:ring-0" placeholder="Jaleco, livro de cálculo, calculadora..." aria-label="Pesquisar materiais" />
+              </div>
+              <Button type="submit" size="icon" aria-label="Buscar"><ArrowRight /></Button>
+            </form>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-9 sm:px-6 lg:px-8">
+          <div className="mb-5 flex items-end justify-between">
+            <div><p className="text-sm font-semibold text-primary">Explore rápido</p><h2 className="text-2xl font-semibold">Categorias</h2></div>
+            <Button variant="link" className="hidden px-0 sm:inline-flex" asChild><a href="/buscar">Ver todas <ArrowRight /></a></Button>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {categories.map((category, index) => {
+              const Icon = categoryIcons[index];
+              return (
+                <button key={category.nome} type="button" onClick={() => void navigate({ to: "/buscar", search: { categoria: category.nome, q: undefined } })} className="flex min-h-24 flex-col items-start justify-between rounded-lg border border-border bg-card p-4 text-left shadow-card transition hover:border-primary hover:bg-soft">
+                  {Icon ? <Icon className="size-6 text-primary" aria-hidden="true" /> : <span aria-hidden="true">{category.simbolo}</span>}
+                  <span className="font-semibold">{category.nome}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8">
+          <div className="mb-5 flex items-end justify-between">
+            <div><p className="text-sm font-semibold text-primary">Boas oportunidades</p><h2 className="text-2xl font-semibold">Destaques perto de você</h2></div>
+            <Button variant="outline" className="hidden sm:inline-flex" asChild><a href="/buscar">Ver materiais <ArrowRight /></a></Button>
+          </div>
+          <div className="grid grid-cols-1 gap-4 min-[460px]:grid-cols-2 lg:grid-cols-4">
+            {materials.filter((material) => material.destaque).map((material) => <MaterialCard key={material.id} material={material} />)}
+          </div>
+        </section>
+      </main>
+    </AppShell>
   );
 }
