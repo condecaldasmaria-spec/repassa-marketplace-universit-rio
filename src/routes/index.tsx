@@ -64,10 +64,10 @@ function Index() {
             {categories.map((category, index) => {
               const Icon = categoryIcons[index];
               return (
-                <button key={category.nome} type="button" onClick={() => void navigate({ to: "/buscar", search: { categoria: category.nome, q: undefined } })} className="flex min-h-24 flex-col items-start justify-between rounded-lg border border-border bg-card p-4 text-left shadow-card transition hover:border-primary hover:bg-soft">
+                <Button key={category.nome} variant="outline" type="button" onClick={() => void navigate({ to: "/buscar", search: { categoria: category.nome, q: undefined } })} className="h-24 flex-col items-start justify-between whitespace-normal border-border bg-card p-4 text-left text-foreground shadow-card hover:border-primary hover:bg-soft">
                   {Icon ? <Icon className="size-6 text-primary" aria-hidden="true" /> : <span aria-hidden="true">{category.simbolo}</span>}
                   <span className="font-semibold">{category.nome}</span>
-                </button>
+                </Button>
               );
             })}
           </div>
