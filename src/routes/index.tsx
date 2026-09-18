@@ -55,8 +55,9 @@ function Index() {
       <main>
         <section className="border-b border-border bg-soft">
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+            <img src="/logo-mark.png" alt="Repassa" className="mb-4 size-14 rounded-xl" />
             <p className="mb-2 text-sm font-semibold uppercase text-primary">
-              Sua universidade, mais circular
+              Materiais que continuam histórias
             </p>
             <h1 className="max-w-2xl text-3xl font-bold leading-tight text-brand-dark sm:text-4xl">
               O material que você precisa pode estar a poucos corredores.

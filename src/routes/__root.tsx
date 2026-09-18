@@ -85,6 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Repassa" },
       { property: "og:description", content: "Materiais acadêmicos usados entre universitários." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/logo-full.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
     ],
