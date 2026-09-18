@@ -24,6 +24,16 @@ export type Material = {
   destaque: boolean;
 };
 
+export type Seller = {
+  id: string;
+  nome: string;
+  instituicao: string;
+  curso: string;
+  notaMedia: number;
+  totalAvaliacoes: number;
+  membroDesde: string;
+};
+
 export const materials: Material[] = [
   {
     id: "mat-001",
@@ -116,6 +126,17 @@ export const materials: Material[] = [
     destaque: false,
   },
 ];
+
+export const sellers: Record<string, Seller> = {
+  "usr-001": { id: "usr-001", nome: "Marina Alves", instituicao: "Universidade Federal de Minas Gerais", curso: "Engenharia Civil", notaMedia: 4.8, totalAvaliacoes: 23, membroDesde: "2024" },
+  "usr-002": { id: "usr-002", nome: "Rafael Santos", instituicao: "Universidade de São Paulo", curso: "Engenharia Elétrica", notaMedia: 4.9, totalAvaliacoes: 31, membroDesde: "2023" },
+  "usr-003": { id: "usr-003", nome: "Camila Rocha", instituicao: "Universidade Federal do Rio de Janeiro", curso: "Medicina", notaMedia: 5, totalAvaliacoes: 12, membroDesde: "2024" },
+  "usr-004": { id: "usr-004", nome: "Lucas Melo", instituicao: "Universidade Federal do Paraná", curso: "Arquitetura e Urbanismo", notaMedia: 4.7, totalAvaliacoes: 18, membroDesde: "2023" },
+  "usr-005": { id: "usr-005", nome: "Beatriz Lima", instituicao: "Universidade Federal de Minas Gerais", curso: "Medicina", notaMedia: 4.9, totalAvaliacoes: 27, membroDesde: "2022" },
+  "usr-006": { id: "usr-006", nome: "João Pedro", instituicao: "Universidade Estadual de Campinas", curso: "Química", notaMedia: 4.6, totalAvaliacoes: 9, membroDesde: "2024" },
+};
+
+export const getSeller = (id: string): Seller | undefined => sellers[id];
 
 export const categories = [
   { nome: "Livros", simbolo: "📚" },
