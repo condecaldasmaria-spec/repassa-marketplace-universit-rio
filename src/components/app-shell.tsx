@@ -13,10 +13,8 @@ const items = [
 export function Brand() {
   return (
     <Link to="/" aria-label="Repassa — início" className="inline-flex items-center gap-2">
-      <span className="grid size-9 place-items-center rounded-md bg-primary font-heading text-xl font-bold text-primary-foreground">
-        R
-      </span>
-      <span className="font-heading text-xl font-bold text-brand-dark">repassa</span>
+      <img src="/logo-mark.png" alt="" className="size-9 rounded-md" aria-hidden="true" />
+      <span className="font-heading text-xl font-bold text-brand-dark">Repassa</span>
     </Link>
   );
 }
