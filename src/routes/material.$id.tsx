@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -9,47 +9,62 @@ import {
   UserRound,
   XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { toast } from "sonner";
 
 import { AppShell } from "@/components/app-shell";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatPrice, getSeller, materials } from "@/data/materials";
+import { formatPrice } from "@/data/materials";
+import { useAppData } from "@/lib/store";
 
 export const Route = createFileRoute("/material/$id")({
-  loader: ({ params }) => {
-    const material = materials.find((item) => item.id === params.id);
-    if (!material) throw notFound();
-    return material;
-  },
-  head: ({ loaderData }) => ({
+  head: () => ({
     meta: [
-      { title: loaderData ? `${loaderData.titulo} — Repassa` : "Material não encontrado — Repassa" },
-      {
-        name: "description",
-        content: loaderData?.descricao ?? "Detalhes do material acadêmico.",
-      },
-      {
-        property: "og:title",
-        content: loaderData ? `${loaderData.titulo} — Repassa` : "Material não encontrado — Repassa",
-      },
-      {
-        property: "og:description",
-        content: loaderData?.descricao ?? "Detalhes do material acadêmico.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "Detalhes do material — Repassa" },
+      { name: "description", content: "Detalhes do material acadêmico anunciado na Repassa." },
     ],
   }),
-  notFoundComponent: MaterialNotFound,
   component: MaterialDetail,
 });
 
 function MaterialDetail() {
-  const material = Route.useLoaderData();
-  const seller = getSeller(material.idVendedor);
+  const { id } = Route.useParams();
+  const { materials, sellers, buyMaterial, getOrCreateConversation } = useAppData();
+  const navigate = useNavigate();
+
+  const material = materials.find((item) => item.id === id);
+
+  if (!material) {
+    return <MaterialNotFound />;
+  }
+
+  const seller = sellers[material.idVendedor];
   const isAvailable = material.status === "disponível";
-  const [notice, setNotice] = useState<string | null>(null);
+  const materialId = material.id;
+  const sellerId = material.idVendedor;
+
+  function handleConfirmPurchase() {
+    buyMaterial(materialId);
+    toast.success("Compra confirmada! Combine a entrega pelo chat.");
+    const conversation = getOrCreateConversation(materialId, sellerId);
+    void navigate({ to: "/conversas/$id", params: { id: conversation.id } });
+  }
+
+  function handleSendMessage() {
+    const conversation = getOrCreateConversation(materialId, sellerId);
+    void navigate({ to: "/conversas/$id", params: { id: conversation.id } });
+  }
 
   return (
     <AppShell>
@@ -96,9 +111,7 @@ function MaterialDetail() {
 
             <div
               className={`mt-4 flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold ${
-                isAvailable
-                  ? "bg-success-soft text-success"
-                  : "bg-muted text-muted-foreground"
+                isAvailable ? "bg-success-soft text-success" : "bg-muted text-muted-foreground"
               }`}
               role="status"
             >
@@ -107,9 +120,7 @@ function MaterialDetail() {
               ) : (
                 <XCircle className="size-5" aria-hidden="true" />
               )}
-              {isAvailable
-                ? "Disponível para compra"
-                : "Este material já foi vendido"}
+              {isAvailable ? "Disponível para compra" : "Este material já foi vendido"}
             </div>
 
             <section className="mt-6">
@@ -135,7 +146,8 @@ function MaterialDetail() {
                       aria-label={`Nota ${seller.notaMedia} em ${seller.totalAvaliacoes} avaliações`}
                     >
                       <Star className="size-4 fill-warning text-warning" aria-hidden="true" />
-                      {seller.notaMedia.toFixed(1).replace(".", ",")} · {seller.totalAvaliacoes} avaliações
+                      {seller.notaMedia.toFixed(1).replace(".", ",")} · {seller.totalAvaliacoes}{" "}
+                      avaliações
                     </p>
                   </div>
                 </div>
@@ -157,40 +169,40 @@ function MaterialDetail() {
                   </div>
                 </div>
 
-                <Button
-                  variant="secondary"
-                  className="mt-4 w-full sm:w-auto"
-                  onClick={() => setNotice("O perfil do vendedor estará disponível em breve.")}
-                >
-                  <UserRound aria-hidden="true" /> Ver detalhes do vendedor
+                <Button variant="secondary" className="mt-4 w-full sm:w-auto" asChild>
+                  <Link to="/perfil/$id" params={{ id: seller.id }}>
+                    <UserRound aria-hidden="true" /> Ver detalhes do vendedor
+                  </Link>
                 </Button>
               </section>
             )}
 
-            {notice && (
-              <div
-                role="status"
-                className="mt-4 rounded-md bg-soft px-4 py-3 text-sm font-semibold text-brand-dark"
-              >
-                {notice}
-              </div>
-            )}
-
             <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <Button
-                className="flex-1"
-                size="lg"
-                disabled={!isAvailable}
-                onClick={() => setNotice("A função de compra será implementada em uma próxima fase.")}
-              >
-                <ShoppingBag aria-hidden="true" /> Comprar
-              </Button>
-              <Button
-                variant="secondary"
-                className="flex-1"
-                size="lg"
-                onClick={() => setNotice("O chat com o vendedor estará disponível em breve.")}
-              >
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button className="flex-1" size="lg" disabled={!isAvailable}>
+                    <ShoppingBag aria-hidden="true" /> Comprar
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmar interesse em comprar?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Você está confirmando interesse em <strong>{material.titulo}</strong> por{" "}
+                      {formatPrice(material.preco)}. Os detalhes de entrega serão combinados
+                      diretamente com o vendedor pelo chat.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleConfirmPurchase}>
+                      Confirmar compra
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <Button variant="secondary" className="flex-1" size="lg" onClick={handleSendMessage}>
                 <MessageCircle aria-hidden="true" /> Enviar mensagem
               </Button>
             </div>
