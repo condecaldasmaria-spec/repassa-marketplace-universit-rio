@@ -98,7 +98,8 @@ export const materials: Material[] = [
   {
     id: "mat-005",
     titulo: "Atlas de anatomia",
-    descricao: "Atlas ilustrado, edição grande, páginas preservadas e capa com sinais leves de uso.",
+    descricao:
+      "Atlas ilustrado, edição grande, páginas preservadas e capa com sinais leves de uso.",
     preco: 110,
     precoProdutoNovo: 260,
     estadoConservacao: "Bom",
@@ -128,15 +129,145 @@ export const materials: Material[] = [
 ];
 
 export const sellers: Record<string, Seller> = {
-  "usr-001": { id: "usr-001", nome: "Marina Alves", instituicao: "Universidade Federal de Minas Gerais", curso: "Engenharia Civil", notaMedia: 4.8, totalAvaliacoes: 23, membroDesde: "2024" },
-  "usr-002": { id: "usr-002", nome: "Rafael Santos", instituicao: "Universidade de São Paulo", curso: "Engenharia Elétrica", notaMedia: 4.9, totalAvaliacoes: 31, membroDesde: "2023" },
-  "usr-003": { id: "usr-003", nome: "Camila Rocha", instituicao: "Universidade Federal do Rio de Janeiro", curso: "Medicina", notaMedia: 5, totalAvaliacoes: 12, membroDesde: "2024" },
-  "usr-004": { id: "usr-004", nome: "Lucas Melo", instituicao: "Universidade Federal do Paraná", curso: "Arquitetura e Urbanismo", notaMedia: 4.7, totalAvaliacoes: 18, membroDesde: "2023" },
-  "usr-005": { id: "usr-005", nome: "Beatriz Lima", instituicao: "Universidade Federal de Minas Gerais", curso: "Medicina", notaMedia: 4.9, totalAvaliacoes: 27, membroDesde: "2022" },
-  "usr-006": { id: "usr-006", nome: "João Pedro", instituicao: "Universidade Estadual de Campinas", curso: "Química", notaMedia: 4.6, totalAvaliacoes: 9, membroDesde: "2024" },
+  "usr-001": {
+    id: "usr-001",
+    nome: "Marina Alves",
+    instituicao: "Universidade Federal de Minas Gerais",
+    curso: "Engenharia Civil",
+    notaMedia: 4.8,
+    totalAvaliacoes: 23,
+    membroDesde: "2024",
+  },
+  "usr-002": {
+    id: "usr-002",
+    nome: "Rafael Santos",
+    instituicao: "Universidade de São Paulo",
+    curso: "Engenharia Elétrica",
+    notaMedia: 4.9,
+    totalAvaliacoes: 31,
+    membroDesde: "2023",
+  },
+  "usr-003": {
+    id: "usr-003",
+    nome: "Camila Rocha",
+    instituicao: "Universidade Federal do Rio de Janeiro",
+    curso: "Medicina",
+    notaMedia: 5,
+    totalAvaliacoes: 12,
+    membroDesde: "2024",
+  },
+  "usr-004": {
+    id: "usr-004",
+    nome: "Lucas Melo",
+    instituicao: "Universidade Federal do Paraná",
+    curso: "Arquitetura e Urbanismo",
+    notaMedia: 4.7,
+    totalAvaliacoes: 18,
+    membroDesde: "2023",
+  },
+  "usr-005": {
+    id: "usr-005",
+    nome: "Beatriz Lima",
+    instituicao: "Universidade Federal de Minas Gerais",
+    curso: "Medicina",
+    notaMedia: 4.9,
+    totalAvaliacoes: 27,
+    membroDesde: "2022",
+  },
+  "usr-006": {
+    id: "usr-006",
+    nome: "João Pedro",
+    instituicao: "Universidade Estadual de Campinas",
+    curso: "Química",
+    notaMedia: 4.6,
+    totalAvaliacoes: 9,
+    membroDesde: "2024",
+  },
 };
 
 export const getSeller = (id: string): Seller | undefined => sellers[id];
+
+export type Review = { id: string; autor: string; nota: number; comentario: string; data: string };
+
+export const reviews: Record<string, Review[]> = {
+  "usr-001": [
+    {
+      id: "rev-1",
+      autor: "Diego Ferreira",
+      nota: 5,
+      comentario: "Vendedora super atenciosa, material exatamente como descrito.",
+      data: "ago. 2026",
+    },
+    {
+      id: "rev-2",
+      autor: "Ana Paula",
+      nota: 5,
+      comentario: "Entrega rápida dentro do campus, recomendo!",
+      data: "jul. 2026",
+    },
+  ],
+  "usr-002": [
+    {
+      id: "rev-3",
+      autor: "Fernanda Dias",
+      nota: 5,
+      comentario: "Ótima negociação, muito educado e pontual.",
+      data: "jun. 2026",
+    },
+    {
+      id: "rev-4",
+      autor: "Bruno Costa",
+      nota: 4,
+      comentario: "Material em bom estado, só demorou um pouco pra combinar horário.",
+      data: "mai. 2026",
+    },
+  ],
+  "usr-003": [
+    {
+      id: "rev-5",
+      autor: "Larissa Prado",
+      nota: 5,
+      comentario: "Jaleco impecável, parecia novo!",
+      data: "ago. 2026",
+    },
+  ],
+  "usr-004": [
+    {
+      id: "rev-6",
+      autor: "Pedro Henrique",
+      nota: 5,
+      comentario: "Kit completo e muito bem cuidado.",
+      data: "jul. 2026",
+    },
+    {
+      id: "rev-7",
+      autor: "Juliana Alves",
+      nota: 4,
+      comentario: "Tudo certo, recomendo o vendedor.",
+      data: "jun. 2026",
+    },
+  ],
+  "usr-005": [
+    {
+      id: "rev-8",
+      autor: "Marcos Vinícius",
+      nota: 5,
+      comentario: "Atlas em ótimo estado, negociação tranquila.",
+      data: "mai. 2026",
+    },
+  ],
+  "usr-006": [
+    {
+      id: "rev-9",
+      autor: "Isabela Nunes",
+      nota: 5,
+      comentario: "Kit novo mesmo, super honesto na descrição.",
+      data: "ago. 2026",
+    },
+  ],
+};
+
+export const getReviews = (id: string): Review[] => reviews[id] ?? [];
 
 export const categories = [
   { nome: "Livros", simbolo: "📚" },
@@ -147,7 +278,9 @@ export const categories = [
 ];
 
 export const courses = [...new Set(materials.map((material) => material.curso))].sort();
-export const materialCategories = [...new Set(materials.map((material) => material.categoria))].sort();
+export const materialCategories = [
+  ...new Set(materials.map((material) => material.categoria)),
+].sort();
 export const conditions: MaterialCondition[] = ["Novo", "Excelente", "Bom", "Regular"];
 
 export const formatPrice = (value: number) =>
