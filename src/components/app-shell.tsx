@@ -5,18 +5,24 @@ import type { ReactNode } from "react";
 const items = [
   { label: "Início", icon: Home, to: "/" as const, enabled: true },
   { label: "Buscar", icon: Search, to: "/buscar" as const, enabled: true },
-  { label: "Anunciar", icon: PlusCircle, to: "/" as const, enabled: false },
-  { label: "Conversas", icon: MessageCircle, to: "/" as const, enabled: false },
-  { label: "Perfil", icon: UserRound, to: "/" as const, enabled: false },
+  { label: "Anunciar", icon: PlusCircle, to: "/anunciar" as const, enabled: true },
+  { label: "Conversas", icon: MessageCircle, to: "/conversas" as const, enabled: true },
+  { label: "Perfil", icon: UserRound, to: "/perfil" as const, enabled: true },
 ];
 
 export function Brand() {
   return (
     <Link to="/" aria-label="Repassa — início" className="inline-flex items-center gap-2">
-      <span className="grid size-9 place-items-center rounded-md bg-primary font-heading text-xl font-bold text-primary-foreground">R</span>
+      <span className="grid size-9 place-items-center rounded-md bg-primary font-heading text-xl font-bold text-primary-foreground">
+        R
+      </span>
       <span className="font-heading text-xl font-bold text-brand-dark">repassa</span>
     </Link>
   );
+}
+
+function isActive(pathname: string, to: string) {
+  return to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -30,13 +36,22 @@ export function AppShell({ children }: { children: ReactNode }) {
           <nav className="hidden items-center gap-1 md:flex" aria-label="Navegação principal">
             {items.map((item) => {
               const Icon = item.icon;
-              const active = item.enabled && pathname === item.to;
+              const active = item.enabled && isActive(pathname, item.to);
               return item.enabled ? (
-                <Link key={item.label} to={item.to} className={active ? "nav-item nav-item-active" : "nav-item"}>
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  className={active ? "nav-item nav-item-active" : "nav-item"}
+                >
                   <Icon aria-hidden="true" /> {item.label}
                 </Link>
               ) : (
-                <span key={item.label} className="nav-item cursor-not-allowed opacity-45" aria-disabled="true" title="Disponível em uma próxima fase">
+                <span
+                  key={item.label}
+                  className="nav-item cursor-not-allowed opacity-45"
+                  aria-disabled="true"
+                  title="Disponível em uma próxima fase"
+                >
                   <Icon aria-hidden="true" /> {item.label}
                 </span>
               );
@@ -47,13 +62,20 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {children}
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card md:hidden" aria-label="Navegação principal">
+      <nav
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card md:hidden"
+        aria-label="Navegação principal"
+      >
         <div className="mx-auto grid h-18 max-w-lg grid-cols-5 px-1 pb-[env(safe-area-inset-bottom)]">
           {items.map((item) => {
             const Icon = item.icon;
-            const active = item.enabled && pathname === item.to;
+            const active = item.enabled && isActive(pathname, item.to);
             return item.enabled ? (
-              <Link key={item.label} to={item.to} className={active ? "mobile-nav-item mobile-nav-item-active" : "mobile-nav-item"}>
+              <Link
+                key={item.label}
+                to={item.to}
+                className={active ? "mobile-nav-item mobile-nav-item-active" : "mobile-nav-item"}
+              >
                 <Icon aria-hidden="true" /> <span>{item.label}</span>
               </Link>
             ) : (

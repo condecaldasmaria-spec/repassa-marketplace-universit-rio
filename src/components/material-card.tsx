@@ -48,8 +48,13 @@ export function MaterialCard({ material }: { material: Material }) {
           </div>
 
           <div className="mt-auto flex items-center justify-between border-t border-border pt-3 text-sm">
-            <span className="truncate pr-2 font-medium text-foreground">{material.vendedor.nome}</span>
-            <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-foreground" aria-label={`Nota ${material.vendedor.notaMedia}`}>
+            <span className="truncate pr-2 font-medium text-foreground">
+              {material.vendedor.nome}
+            </span>
+            <span
+              className="inline-flex shrink-0 items-center gap-1 font-semibold text-foreground"
+              aria-label={`Nota ${material.vendedor.notaMedia}`}
+            >
               <Star className="size-4 fill-warning text-warning" aria-hidden="true" />
               {material.vendedor.notaMedia.toFixed(1).replace(".", ",")}
             </span>
